@@ -1,0 +1,51 @@
+school_id,school_name,region,school_type,open_date,status
+SCH001,ACT Education School 001,North Canberra,High School,1994-09-04,Active
+SCH002,ACT Education School 002,North Canberra,Primary,2018-12-05,Active
+SCH003,ACT Education School 003,North Canberra,Primary,1978-05-29,Active
+SCH004,ACT Education School 004,North Canberra,Primary,1987-11-03,Active
+SCH005,ACT Education School 005,Tuggeranong,High School,1989-10-11,Active
+SCH006,ACT Education School 006,Weston Creek,Primary,1970-08-01,Active
+SCH007,ACT Education School 007,Tuggeranong,Primary,2000-07-11,Active
+SCH008,ACT Education School 008,Weston Creek,Primary,2000-03-13,Active
+SCH009,ACT Education School 009,Belconnen,Primary,2000-11-09,Active
+SCH010,ACT Education School 010,Woden,College,2011-03-21,Active
+SCH011,ACT Education School 011,Tuggeranong,Specialist,1977-01-26,Active
+SCH012,ACT Education School 012,Gungahlin,College,2002-06-12,Active
+SCH013,ACT Education School 013,North Canberra,High School,1990-06-12,Active
+SCH014,ACT Education School 014,Weston Creek,Specialist,1990-11-20,Active
+SCH015,ACT Education School 015,Tuggeranong,Primary,2002-09-24,Active
+SCH016,ACT Education School 016,Woden,Primary,1993-12-14,Active
+SCH017,ACT Education School 017,North Canberra,High School,1985-05-09,Active
+SCH018,ACT Education School 018,Tuggeranong,Primary,2004-01-16,Active
+SCH019,ACT Education School 019,Woden,College,2019-12-20,Active
+SCH020,ACT Education School 020,Weston Creek,Primary,1975-01-07,Active
+SCH021,ACT Education School 021,Belconnen,Primary,2005-12-28,Active
+SCH022,ACT Education School 022,Gungahlin,Primary,1998-03-26,Active
+SCH023,ACT Education School 023,Woden,Primary,2011-03-02,Active
+SCH024,ACT Education School 024,Woden,Primary,2018-05-10,Active
+SCH025,ACT Education School 025,Gungahlin,High School,2005-10-31,Active
+SCH026,ACT Education School 026,South Canberra,Specialist,2015-09-18,Active
+SCH027,ACT Education School 027,Weston Creek,High School,1979-11-02,Active
+SCH028,ACT Education School 028,Woden,Primary,2007-11-16,Active
+SCH029,ACT Education School 029,Gungahlin,Primary,2011-12-29,Active
+SCH030,ACT Education School 030,Weston Creek,Specialist,1971-01-12,Active
+SCH031,ACT Education School 031,Gungahlin,Primary,1993-12-09,Active
+SCH032,ACT Education School 032,Belconnen,Primary,2009-01-02,Active
+SCH033,ACT Education School 033,Woden,Primary,1993-08-18,Closed
+SCH034,ACT Education School 034,Gungahlin,High School,1979-07-19,Active
+SCH035,ACT Education School 035,Woden,Primary,2015-07-19,Active
+SCH036,ACT Education School 036,Weston Creek,Primary,1984-06-29,Active
+SCH037,ACT Education School 037,Gungahlin,High School,1970-01-19,Active
+SCH038,ACT Education School 038,North Canberra,Primary,2002-07-26,Active
+SCH039,ACT Education School 039,Belconnen,College,1991-06-26,Active
+SCH040,ACT Education School 040,North Canberra,College,1977-09-07,Active
+SCH041,ACT Education School 041,Weston Creek,College,2017-10-16,Active
+SCH042,ACT Education School 042,Tuggeranong,Primary,2019-04-29,Active
+SCH043,ACT Education School 043,Gungahlin,Primary,2007-12-18,Closed
+SCH044,ACT Education School 044,Weston Creek,College,1988-01-18,Active
+SCH045,ACT Education School 045,Woden,Primary,2003-07-03,Active
+SCH046,ACT Education School 046,North Canberra,Primary,1992-03-29,Active
+SCH047,ACT Education School 047,Gungahlin,Primary,2019-09-11,Active
+SCH048,ACT Education School 048,North Canberra,Primary,1975-04-14,Active
+SCH049,ACT Education School 049,Weston Creek,College,1999-08-24,Active
+SCH050,ACT Education School 050,Woden,Primary,2013-07-20,Active

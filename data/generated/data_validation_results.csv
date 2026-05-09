@@ -1,0 +1,12 @@
+﻿validation_id,check_name,table_name,failed_record_count,severity,run_timestamp
+DQ001,Missing student_id in students,stg_students,1,High,2026-05-08T04:02:23.9463993
+DQ002,Missing school_id in students,stg_students,1,High,2026-05-08T04:02:23.9463993
+DQ003,Invalid attendance days,stg_attendance,1,High,2026-05-08T04:02:23.9463993
+DQ004,Duplicate attendance business records,stg_attendance,4,Medium,2026-05-08T04:02:23.9463993
+DQ005,Attendance references missing student,stg_attendance,1,High,2026-05-08T04:02:23.9463993
+DQ006,Assessment references missing student,stg_assessment_results,0,High,2026-05-08T04:02:23.9463993
+DQ007,Invalid assessment score,stg_assessment_results,1,High,2026-05-08T04:02:23.9463993
+DQ008,Invalid proficiency band,stg_assessment_results,0,Medium,2026-05-08T04:02:23.9463993
+DQ009,Invalid school status,stg_schools,0,Medium,2026-05-08T04:02:23.9463993
+DQ010,Future attendance month,stg_attendance,0,Medium,2026-05-08T04:02:23.9463993
+DQ011,Activity linked to inactive school,multiple staging views,11704,Low,2026-05-08T04:02:23.9463993
