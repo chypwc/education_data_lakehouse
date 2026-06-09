@@ -5,12 +5,14 @@ import random
 from datetime import date, timedelta
 
 RANDOM_SEED = 42
-OUTPUT_DIR = Path("data/raw_sample")
+BATCH_1_ID = "2025-01-15"
+OUTPUT_DIR = Path(f"data/batches/batch_id={BATCH_1_ID}")
 
 NUM_SCHOOLS = 50
 NUM_STUDENTS = 10_000
+
 START_YEAR = 2024
-END_YEAR = 2025
+END_YEAR = 2024
 
 random.seed(RANDOM_SEED)
 

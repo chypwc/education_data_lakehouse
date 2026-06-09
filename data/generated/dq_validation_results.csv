@@ -1,0 +1,23 @@
+run_id,batch_id,rule_id,rule_name,target_table,severity,failed_record_count,status,run_timestamp
+dev_education_qa_data_quality_checks_20260606T083052Z,2025-01-15,DQ001,Missing student ID,silver.students,High,1,FAIL,2026-06-06T09:08:00.384Z
+dev_education_qa_data_quality_checks_20260606T083052Z,2026-01-15,DQ001,Missing student ID,silver.students,High,0,PASS,2026-06-06T09:08:04.438Z
+dev_education_qa_data_quality_checks_20260606T083052Z,2025-01-15,DQ002,Missing school ID,silver.students,High,1,FAIL,2026-06-06T09:17:08.184Z
+dev_education_qa_data_quality_checks_20260606T083052Z,2026-01-15,DQ002,Missing school ID,silver.students,High,1,FAIL,2026-06-06T09:17:05.262Z
+dev_education_qa_data_quality_checks_20260606T083052Z,2025-01-15,DQ003,Invalid attendance days,silver.attendance,High,1,FAIL,2026-06-06T09:30:36.571Z
+dev_education_qa_data_quality_checks_20260606T083052Z,2026-01-15,DQ003,Invalid attendance days,silver.attendance,High,1,FAIL,2026-06-06T09:30:39.583Z
+dev_education_qa_data_quality_checks_20260606T083052Z,2025-01-15,DQ004,Duplicate attendance business record,silver.attendance,Medium,4,FAIL,2026-06-06T09:33:02.286Z
+dev_education_qa_data_quality_checks_20260606T083052Z,2026-01-15,DQ004,Duplicate attendance business record,silver.attendance,Medium,4,FAIL,2026-06-06T09:32:58.437Z
+dev_education_qa_data_quality_checks_20260606T083052Z,2025-01-15,DQ005,Attendance references missing student,silver.attendance,High,1,FAIL,2026-06-06T09:38:05.926Z
+dev_education_qa_data_quality_checks_20260606T083052Z,2026-01-15,DQ005,Attendance references missing student,silver.attendance,High,1,FAIL,2026-06-06T09:38:08.866Z
+dev_education_qa_data_quality_checks_20260606T083052Z,2025-01-15,DQ006,Assessment references missing student,silver.assessment_results,High,0,PASS,2026-06-06T09:39:09.039Z
+dev_education_qa_data_quality_checks_20260606T083052Z,2026-01-15,DQ006,Assessment references missing student,silver.assessment_results,High,0,PASS,2026-06-06T09:39:08.224Z
+dev_education_qa_data_quality_checks_20260606T083052Z,2025-01-15,DQ007,Invalid assessment score,silver.assessment_results,High,1,FAIL,2026-06-06T09:45:50.277Z
+dev_education_qa_data_quality_checks_20260606T083052Z,2026-01-15,DQ007,Invalid assessment score,silver.assessment_results,High,1,FAIL,2026-06-06T09:45:52.870Z
+dev_education_qa_data_quality_checks_20260606T083052Z,2025-01-15,DQ008,Invalid proficiency band,silver.assessment_results,Medium,0,PASS,2026-06-06T09:48:19.165Z
+dev_education_qa_data_quality_checks_20260606T083052Z,2026-01-15,DQ008,Invalid proficiency band,silver.assessment_results,Medium,0,PASS,2026-06-06T09:48:18.345Z
+dev_education_qa_data_quality_checks_20260606T083052Z,2025-01-15,DQ009,Invalid school status,silver.schools,Medium,0,PASS,2026-06-06T09:49:07.067Z
+dev_education_qa_data_quality_checks_20260606T083052Z,2026-01-15,DQ009,Invalid school status,silver.schools,Medium,0,PASS,2026-06-06T09:49:08.015Z
+dev_education_qa_data_quality_checks_20260606T083052Z,2025-01-15,DQ010,Future attendance month,silver.attendance,Medium,0,PASS,2026-06-06T09:50:19.433Z
+dev_education_qa_data_quality_checks_20260606T083052Z,2026-01-15,DQ010,Future attendance month,silver.attendance,Medium,0,PASS,2026-06-06T09:50:20.244Z
+dev_education_qa_data_quality_checks_20260606T083052Z,2025-01-15,DQ011,School event linked to inactive or missing school,silver.school_events,Low,5,WARN,2026-06-06T09:52:03.282Z
+dev_education_qa_data_quality_checks_20260606T083052Z,2026-01-15,DQ011,School event linked to inactive or missing school,silver.school_events,Low,0,PASS,2026-06-06T09:52:06.526Z
