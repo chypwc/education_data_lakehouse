@@ -1,0 +1,44 @@
+[
+  {
+    "event_id": "EVT000184",
+    "school_id": "SCH032",
+    "event_type": "Attendance campaign",
+    "event_date": "2025-12-01",
+    "description": "Campaign to improve student attendance and reduce unexplained absences"
+  },
+  {
+    "event_id": "EVT000185",
+    "school_id": "SCH034",
+    "event_type": "Wellbeing program",
+    "event_date": "2025-12-08",
+    "description": "School-based wellbeing program supporting student engagement"
+  },
+  {
+    "event_id": "EVT000186",
+    "school_id": "SCH002",
+    "event_type": "Wellbeing program",
+    "event_date": "2025-12-24",
+    "description": "School-based wellbeing program supporting student engagement"
+  },
+  {
+    "event_id": "EVT000187",
+    "school_id": "SCH005",
+    "event_type": "Assessment intervention",
+    "event_date": "2025-12-04",
+    "description": "Targeted intervention for students requiring academic support"
+  },
+  {
+    "event_id": "EVT000188",
+    "school_id": "SCH003",
+    "event_type": "Attendance campaign",
+    "event_date": "2025-12-12",
+    "description": "Campaign to improve student attendance and reduce unexplained absences"
+  },
+  {
+    "event_id": "EVT000189",
+    "school_id": "SCH011",
+    "event_type": "Attendance campaign",
+    "event_date": "2025-12-24",
+    "description": "Campaign to improve student attendance and reduce unexplained absences"
+  }
+]

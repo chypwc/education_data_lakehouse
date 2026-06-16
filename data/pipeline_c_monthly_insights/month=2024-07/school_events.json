@@ -1,0 +1,65 @@
+[
+  {
+    "event_id": "EVT000045",
+    "school_id": "SCH009",
+    "event_type": "Wellbeing program",
+    "event_date": "2024-07-10",
+    "description": "School-based wellbeing program supporting student engagement"
+  },
+  {
+    "event_id": "EVT000046",
+    "school_id": "SCH006",
+    "event_type": "Wellbeing program",
+    "event_date": "2024-07-02",
+    "description": "School-based wellbeing program supporting student engagement"
+  },
+  {
+    "event_id": "EVT000047",
+    "school_id": "SCH004",
+    "event_type": "Wellbeing program",
+    "event_date": "2024-07-15",
+    "description": "School-based wellbeing program supporting student engagement"
+  },
+  {
+    "event_id": "EVT000048",
+    "school_id": "SCH042",
+    "event_type": "Wellbeing program",
+    "event_date": "2024-07-19",
+    "description": "School-based wellbeing program supporting student engagement"
+  },
+  {
+    "event_id": "EVT000049",
+    "school_id": "SCH031",
+    "event_type": "Wellbeing program",
+    "event_date": "2024-07-06",
+    "description": "School-based wellbeing program supporting student engagement"
+  },
+  {
+    "event_id": "EVT000050",
+    "school_id": "SCH046",
+    "event_type": "Wellbeing program",
+    "event_date": "2024-07-01",
+    "description": "School-based wellbeing program supporting student engagement"
+  },
+  {
+    "event_id": "EVT000051",
+    "school_id": "SCH043",
+    "event_type": "Attendance campaign",
+    "event_date": "2024-07-19",
+    "description": "Campaign to improve student attendance and reduce unexplained absences"
+  },
+  {
+    "event_id": "EVT000052",
+    "school_id": "SCH030",
+    "event_type": "Attendance campaign",
+    "event_date": "2024-07-14",
+    "description": "Campaign to improve student attendance and reduce unexplained absences"
+  },
+  {
+    "event_id": "EVT000053",
+    "school_id": "SCH003",
+    "event_type": "Wellbeing program",
+    "event_date": "2024-07-20",
+    "description": "School-based wellbeing program supporting student engagement"
+  }
+]

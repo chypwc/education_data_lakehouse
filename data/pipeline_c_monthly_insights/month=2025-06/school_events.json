@@ -1,0 +1,51 @@
+[
+  {
+    "event_id": "EVT000146",
+    "school_id": "SCH048",
+    "event_type": "Attendance campaign",
+    "event_date": "2025-06-13",
+    "description": "Campaign to improve student attendance and reduce unexplained absences"
+  },
+  {
+    "event_id": "EVT000147",
+    "school_id": "SCH041",
+    "event_type": "Wellbeing program",
+    "event_date": "2025-06-04",
+    "description": "School-based wellbeing program supporting student engagement"
+  },
+  {
+    "event_id": "EVT000148",
+    "school_id": "SCH010",
+    "event_type": "Attendance campaign",
+    "event_date": "2025-06-02",
+    "description": "Campaign to improve student attendance and reduce unexplained absences"
+  },
+  {
+    "event_id": "EVT000149",
+    "school_id": "SCH035",
+    "event_type": "Attendance campaign",
+    "event_date": "2025-06-04",
+    "description": "Campaign to improve student attendance and reduce unexplained absences"
+  },
+  {
+    "event_id": "EVT000150",
+    "school_id": "SCH006",
+    "event_type": "Attendance campaign",
+    "event_date": "2025-06-04",
+    "description": "Campaign to improve student attendance and reduce unexplained absences"
+  },
+  {
+    "event_id": "EVT000151",
+    "school_id": "SCH040",
+    "event_type": "Attendance campaign",
+    "event_date": "2025-06-22",
+    "description": "Campaign to improve student attendance and reduce unexplained absences"
+  },
+  {
+    "event_id": "EVT000152",
+    "school_id": "SCH030",
+    "event_type": "Assessment intervention",
+    "event_date": "2025-06-02",
+    "description": "Targeted intervention for students requiring academic support"
+  }
+]

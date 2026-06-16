@@ -1,0 +1,224 @@
+{
+  "random_seed": 20240612,
+  "snapshot_month": "2024-01",
+  "snapshot_folder": "month=2024-01",
+  "change_months": [
+    "2024-02",
+    "2024-03",
+    "2024-04",
+    "2024-05",
+    "2024-06",
+    "2024-07",
+    "2024-08",
+    "2024-09",
+    "2024-10",
+    "2024-11",
+    "2024-12",
+    "2025-01",
+    "2025-02",
+    "2025-03",
+    "2025-04",
+    "2025-05",
+    "2025-06",
+    "2025-07",
+    "2025-08",
+    "2025-09",
+    "2025-10",
+    "2025-11",
+    "2025-12"
+  ],
+  "change_folders": [
+    "month=2024-02",
+    "month=2024-03",
+    "month=2024-04",
+    "month=2024-05",
+    "month=2024-06",
+    "month=2024-07",
+    "month=2024-08",
+    "month=2024-09",
+    "month=2024-10",
+    "month=2024-11",
+    "month=2024-12",
+    "month=2025-01",
+    "month=2025-02",
+    "month=2025-03",
+    "month=2025-04",
+    "month=2025-05",
+    "month=2025-06",
+    "month=2025-07",
+    "month=2025-08",
+    "month=2025-09",
+    "month=2025-10",
+    "month=2025-11",
+    "month=2025-12"
+  ],
+  "initial_schools": 50,
+  "initial_students": 10000,
+  "batches": {
+    "2024-02": {
+      "schools_delta": 0,
+      "students_delta": 53,
+      "attendance": 10015,
+      "assessment_results_delta": 0,
+      "school_events": 6
+    },
+    "2024-03": {
+      "schools_delta": 0,
+      "students_delta": 54,
+      "attendance": 10030,
+      "assessment_results_delta": 0,
+      "school_events": 7
+    },
+    "2024-04": {
+      "schools_delta": 0,
+      "students_delta": 53,
+      "attendance": 10045,
+      "assessment_results_delta": 0,
+      "school_events": 8
+    },
+    "2024-05": {
+      "schools_delta": 0,
+      "students_delta": 53,
+      "attendance": 10060,
+      "assessment_results_delta": 0,
+      "school_events": 6
+    },
+    "2024-06": {
+      "schools_delta": 0,
+      "students_delta": 53,
+      "attendance": 10076,
+      "assessment_results_delta": 0,
+      "school_events": 6
+    },
+    "2024-07": {
+      "schools_delta": 0,
+      "students_delta": 53,
+      "attendance": 10090,
+      "assessment_results_delta": 0,
+      "school_events": 9
+    },
+    "2024-08": {
+      "schools_delta": 0,
+      "students_delta": 53,
+      "attendance": 10106,
+      "assessment_results_delta": 0,
+      "school_events": 12
+    },
+    "2024-09": {
+      "schools_delta": 0,
+      "students_delta": 53,
+      "attendance": 10120,
+      "assessment_results_delta": 0,
+      "school_events": 7
+    },
+    "2024-10": {
+      "schools_delta": 0,
+      "students_delta": 53,
+      "attendance": 10135,
+      "assessment_results_delta": 0,
+      "school_events": 10
+    },
+    "2024-11": {
+      "schools_delta": 0,
+      "students_delta": 53,
+      "attendance": 10150,
+      "assessment_results_delta": 30451,
+      "school_events": 11
+    },
+    "2024-12": {
+      "schools_delta": 0,
+      "students_delta": 53,
+      "attendance": 10165,
+      "assessment_results_delta": 0,
+      "school_events": 8
+    },
+    "2025-01": {
+      "schools_delta": 0,
+      "students_delta": 10615,
+      "attendance": 9812,
+      "assessment_results_delta": 0,
+      "school_events": 11
+    },
+    "2025-02": {
+      "schools_delta": 0,
+      "students_delta": 53,
+      "attendance": 9827,
+      "assessment_results_delta": 0,
+      "school_events": 12
+    },
+    "2025-03": {
+      "schools_delta": 0,
+      "students_delta": 53,
+      "attendance": 9842,
+      "assessment_results_delta": 0,
+      "school_events": 5
+    },
+    "2025-04": {
+      "schools_delta": 0,
+      "students_delta": 53,
+      "attendance": 9857,
+      "assessment_results_delta": 0,
+      "school_events": 11
+    },
+    "2025-05": {
+      "schools_delta": 0,
+      "students_delta": 53,
+      "attendance": 9872,
+      "assessment_results_delta": 0,
+      "school_events": 5
+    },
+    "2025-06": {
+      "schools_delta": 0,
+      "students_delta": 53,
+      "attendance": 9888,
+      "assessment_results_delta": 0,
+      "school_events": 7
+    },
+    "2025-07": {
+      "schools_delta": 1,
+      "students_delta": 243,
+      "attendance": 9902,
+      "assessment_results_delta": 0,
+      "school_events": 7
+    },
+    "2025-08": {
+      "schools_delta": 0,
+      "students_delta": 53,
+      "attendance": 9918,
+      "assessment_results_delta": 0,
+      "school_events": 5
+    },
+    "2025-09": {
+      "schools_delta": 0,
+      "students_delta": 53,
+      "attendance": 9933,
+      "assessment_results_delta": 0,
+      "school_events": 9
+    },
+    "2025-10": {
+      "schools_delta": 0,
+      "students_delta": 53,
+      "attendance": 9947,
+      "assessment_results_delta": 0,
+      "school_events": 5
+    },
+    "2025-11": {
+      "schools_delta": 0,
+      "students_delta": 53,
+      "attendance": 9962,
+      "assessment_results_delta": 29887,
+      "school_events": 5
+    },
+    "2025-12": {
+      "schools_delta": 0,
+      "students_delta": 53,
+      "attendance": 9977,
+      "assessment_results_delta": 0,
+      "school_events": 6
+    }
+  },
+  "final_students": 11000,
+  "final_active_students": 9977,
+  "final_schools": 50,
+  "final_active_schools": 49
+}

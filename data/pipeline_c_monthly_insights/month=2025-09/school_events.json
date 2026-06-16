@@ -1,0 +1,65 @@
+[
+  {
+    "event_id": "EVT000165",
+    "school_id": "SCH022",
+    "event_type": "Wellbeing program",
+    "event_date": "2025-09-03",
+    "description": "School-based wellbeing program supporting student engagement"
+  },
+  {
+    "event_id": "EVT000166",
+    "school_id": "SCH040",
+    "event_type": "Attendance campaign",
+    "event_date": "2025-09-14",
+    "description": "Campaign to improve student attendance and reduce unexplained absences"
+  },
+  {
+    "event_id": "EVT000167",
+    "school_id": "SCH036",
+    "event_type": "Wellbeing program",
+    "event_date": "2025-09-06",
+    "description": "School-based wellbeing program supporting student engagement"
+  },
+  {
+    "event_id": "EVT000168",
+    "school_id": "SCH014",
+    "event_type": "Wellbeing program",
+    "event_date": "2025-09-19",
+    "description": "School-based wellbeing program supporting student engagement"
+  },
+  {
+    "event_id": "EVT000169",
+    "school_id": "SCH015",
+    "event_type": "Assessment intervention",
+    "event_date": "2025-09-21",
+    "description": "Targeted intervention for students requiring academic support"
+  },
+  {
+    "event_id": "EVT000170",
+    "school_id": "SCH044",
+    "event_type": "Assessment intervention",
+    "event_date": "2025-09-20",
+    "description": "Targeted intervention for students requiring academic support"
+  },
+  {
+    "event_id": "EVT000171",
+    "school_id": "SCH021",
+    "event_type": "Attendance campaign",
+    "event_date": "2025-09-20",
+    "description": "Campaign to improve student attendance and reduce unexplained absences"
+  },
+  {
+    "event_id": "EVT000172",
+    "school_id": "SCH038",
+    "event_type": "Attendance campaign",
+    "event_date": "2025-09-19",
+    "description": "Campaign to improve student attendance and reduce unexplained absences"
+  },
+  {
+    "event_id": "EVT000173",
+    "school_id": "SCH027",
+    "event_type": "Assessment intervention",
+    "event_date": "2025-09-21",
+    "description": "Targeted intervention for students requiring academic support"
+  }
+]

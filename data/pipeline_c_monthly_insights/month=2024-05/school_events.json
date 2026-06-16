@@ -1,0 +1,44 @@
+[
+  {
+    "event_id": "EVT000033",
+    "school_id": "SCH037",
+    "event_type": "Wellbeing program",
+    "event_date": "2024-05-17",
+    "description": "School-based wellbeing program supporting student engagement"
+  },
+  {
+    "event_id": "EVT000034",
+    "school_id": "SCH035",
+    "event_type": "Wellbeing program",
+    "event_date": "2024-05-19",
+    "description": "School-based wellbeing program supporting student engagement"
+  },
+  {
+    "event_id": "EVT000035",
+    "school_id": "SCH039",
+    "event_type": "Attendance campaign",
+    "event_date": "2024-05-20",
+    "description": "Campaign to improve student attendance and reduce unexplained absences"
+  },
+  {
+    "event_id": "EVT000036",
+    "school_id": "SCH038",
+    "event_type": "Attendance campaign",
+    "event_date": "2024-05-15",
+    "description": "Campaign to improve student attendance and reduce unexplained absences"
+  },
+  {
+    "event_id": "EVT000037",
+    "school_id": "SCH040",
+    "event_type": "Wellbeing program",
+    "event_date": "2024-05-04",
+    "description": "School-based wellbeing program supporting student engagement"
+  },
+  {
+    "event_id": "EVT000038",
+    "school_id": "SCH007",
+    "event_type": "Assessment intervention",
+    "event_date": "2024-05-18",
+    "description": "Targeted intervention for students requiring academic support"
+  }
+]

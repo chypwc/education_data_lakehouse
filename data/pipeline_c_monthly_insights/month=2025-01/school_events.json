@@ -1,0 +1,79 @@
+[
+  {
+    "event_id": "EVT000102",
+    "school_id": "SCH002",
+    "event_type": "Attendance campaign",
+    "event_date": "2025-01-05",
+    "description": "Campaign to improve student attendance and reduce unexplained absences"
+  },
+  {
+    "event_id": "EVT000103",
+    "school_id": "SCH010",
+    "event_type": "Wellbeing program",
+    "event_date": "2025-01-14",
+    "description": "School-based wellbeing program supporting student engagement"
+  },
+  {
+    "event_id": "EVT000104",
+    "school_id": "SCH006",
+    "event_type": "Wellbeing program",
+    "event_date": "2025-01-14",
+    "description": "School-based wellbeing program supporting student engagement"
+  },
+  {
+    "event_id": "EVT000105",
+    "school_id": "SCH016",
+    "event_type": "Attendance campaign",
+    "event_date": "2025-01-21",
+    "description": "Campaign to improve student attendance and reduce unexplained absences"
+  },
+  {
+    "event_id": "EVT000106",
+    "school_id": "SCH043",
+    "event_type": "Assessment intervention",
+    "event_date": "2025-01-12",
+    "description": "Targeted intervention for students requiring academic support"
+  },
+  {
+    "event_id": "EVT000107",
+    "school_id": "SCH017",
+    "event_type": "Attendance campaign",
+    "event_date": "2025-01-16",
+    "description": "Campaign to improve student attendance and reduce unexplained absences"
+  },
+  {
+    "event_id": "EVT000108",
+    "school_id": "SCH033",
+    "event_type": "Wellbeing program",
+    "event_date": "2025-01-05",
+    "description": "School-based wellbeing program supporting student engagement"
+  },
+  {
+    "event_id": "EVT000109",
+    "school_id": "SCH034",
+    "event_type": "Assessment intervention",
+    "event_date": "2025-01-12",
+    "description": "Targeted intervention for students requiring academic support"
+  },
+  {
+    "event_id": "EVT000110",
+    "school_id": "SCH007",
+    "event_type": "Attendance campaign",
+    "event_date": "2025-01-11",
+    "description": "Campaign to improve student attendance and reduce unexplained absences"
+  },
+  {
+    "event_id": "EVT000111",
+    "school_id": "SCH014",
+    "event_type": "Attendance campaign",
+    "event_date": "2025-01-07",
+    "description": "Campaign to improve student attendance and reduce unexplained absences"
+  },
+  {
+    "event_id": "EVT000112",
+    "school_id": "SCH009",
+    "event_type": "Wellbeing program",
+    "event_date": "2025-01-14",
+    "description": "School-based wellbeing program supporting student engagement"
+  }
+]

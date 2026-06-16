@@ -1,280 +1,127 @@
-# ACT Education Azure Lakehouse QA Portfolio
+# ACT Education Azure Lakehouse Portfolio
 
-This portfolio project demonstrates two Azure education data pipelines built with synthetic school, student, attendance, assessment, and school event data.
+This repository demonstrates three Azure education data pipelines using synthetic school, student, attendance, assessment, and school event data.
 
-The project started as an **ADF + Synapse lakehouse pipeline** and was extended into a more production-style **Azure Databricks QA lakehouse** with Delta tables, Databricks Jobs, data quality rules, defect logging, Gold star-schema facts and dimensions, reporting views, an ADF trigger wrapper, and Power BI validation.
+The project is best read as one portfolio with three distinct evidence streams:
 
-## Data Disclaimer
-
-All data is synthetic. The school, student, attendance, assessment, and event records do not represent real ACT Education Directorate schools, students, staff, families, addresses, or outcomes.
-
-## Project Framing
-
-This repository is best presented as one portfolio project with two implementation paths:
-
-| Pipeline | Role in Portfolio | Main Purpose |
+| Pipeline | Main focus | Portfolio evidence |
 |---|---|---|
-| Pipeline A: ADF + Synapse | Foundation / baseline implementation | Demonstrates ADLS, ADF ingestion, Synapse serverless SQL, SQL quality checks, Data Vault-style modelling, curated marts, and Power BI |
-| Pipeline B: Databricks QA Lakehouse | Primary QA Analyst showcase | Demonstrates Databricks, Delta Lake, Bronze/Silver/QA/Gold layers, rule catalogues, failed-record evidence, defect logging, incremental loading, orchestration, and dashboard testing |
+| Pipeline A: ADF + Synapse Baseline | Azure ingestion and serverless SQL reporting | ADLS, ADF, Synapse serverless SQL, SQL validation, curated reporting views, and baseline Power BI |
+| Pipeline B: Databricks QA Lakehouse | QA Analyst delivery | Databricks, Delta Lake, Bronze/Silver/QA/Gold layers, rule checks, rejected records, defect evidence, orchestration, and dashboard testing |
+| Pipeline C: Monthly Education Insights | Analytics Officer reporting | Azure SQL Database serverless, monthly merge/upsert processing, Power BI semantic model, stakeholder dashboard pages, data caveats, analysis report, and monthly briefs |
 
-The Databricks pipeline is the main project for the ACT Education QA Analyst role because it shows end-to-end QA practice across ingestion, transformation, validation, reporting, defect handling, UAT support, and governance.
+All data is synthetic. It does not represent real ACT Education Directorate schools, students, staff, families, addresses, or outcomes.
 
 ## Architecture
 
-Full architecture details are documented in [docs/architecture.md](docs/architecture.md).
+The architecture is organised as three related but separate pipelines over the same synthetic education domain. Pipeline A establishes the original Azure ingestion and Synapse reporting baseline. Pipeline B extends the project into a Databricks QA lakehouse, where the main evidence is validation, failed-record handling, defect tracking, and reporting test coverage. Pipeline C adds an Analytics Officer-style reporting path, where monthly data is processed into stakeholder-facing Power BI insights, caveats, and written briefs.
 
-### Pipeline A: ADF + Synapse Baseline
+Full architecture notes are in [docs/shared/architecture.md](docs/shared/architecture.md).
 
-```text
-Synthetic CSV / JSON files
-        |
-        v
-Azure CLI upload to ADLS raw zone
-        |
-        v
-Azure Data Factory raw-to-staging pipeline
-        |
-        v
-Synapse serverless SQL staging views
-        |
-        v
-SQL data quality validation results
-        |
-        v
-Data Vault-style Parquet layer
-        |
-        v
-Curated dimensional Parquet layer
-        |
-        v
-Synapse SQL reporting views
-        |
-        v
-Power BI dashboard
-```
+| Pipeline | Processing pattern | Reporting output |
+|---|---|---|
+| Pipeline A | Source files are uploaded to ADLS, copied by ADF, queried through Synapse serverless SQL, validated, and exposed through reporting views. | Baseline Power BI dashboard |
+| Pipeline B | ADLS batch files are processed by Databricks Jobs through Bronze, Silver, QA, Gold, and Reporting layers; ADF is used as an enterprise wrapper to trigger the Databricks job from a storage marker file. | QA-focused Power BI dashboard and validation evidence |
+| Pipeline C | Monthly `month=YYYY-MM` raw folders trigger ADF, load Azure SQL Bronze tables, merge into Silver, record Quality/Audit evidence, refresh Gold/Reporting outputs, and feed Power BI. | Monthly insights dashboard, overall analysis report, and monthly briefs |
 
-### Pipeline B: Databricks QA Lakehouse
+Short pipeline view:
 
 ```text
-ADLS raw batch files
-        |
-        v
-Databricks Job: job_education_qa_pipeline
-        |
-        +--> 01_ingest_raw_to_bronze
-        +--> 02_transform_bronze_to_silver
-        +--> 03_run_data_quality_checks
-        +--> 04_build_gold_reporting_tables
-        +--> 05_create_reporting_views
-        |
-        v
-Power BI QA dashboard
+Pipeline A:
+synthetic files
+-> ADLS raw zone
+-> ADF copy pipeline
+-> Synapse serverless SQL staging, quality, curated, reporting
+-> Power BI baseline dashboard
+
+Pipeline B:
+ADLS batch files + _READY marker
+-> ADF storage event trigger wrapper
+-> Databricks Jobs API
+-> Databricks Bronze, Silver, QA, Gold, Reporting layers
+-> Power BI QA dashboard and validation evidence
+
+Pipeline C:
+monthly raw folders + _READY marker
+-> ADF storage event trigger
+-> Azure SQL bronze load tables
+-> silver merge/upsert tables
+-> quality and audit evidence
+-> gold dimensions/facts and reporting views
+-> Power BI insights dashboard
+-> analysis report and monthly briefs
 ```
 
-Implemented enterprise wrapper:
+## Tools Used
 
-```text
-ADLS marker file: raw/_triggers/batch_id=<batch_id>/_READY.json
-        |
-        v
-ADF storage event trigger
-        |
-        v
-ADF pipeline Web activity
-        |
-        v
-Databricks Jobs API run-now
-        |
-        v
-job_education_qa_pipeline
-```
-
-Databricks Jobs are the main orchestrator for the Databricks pipeline. Azure Data Factory is used as an optional enterprise wrapper for event-based triggering and cross-service integration evidence.
-
-## Azure Services Used
-
-- Azure Data Lake Storage Gen2
-- Azure Data Factory
-- Azure Synapse Analytics serverless SQL
-- Azure Databricks
-- Delta Lake
-- Unity Catalog
-- Power BI Desktop
-
-## Source Datasets
-
-| Dataset | Description |
+| Tool | Used for |
 |---|---|
-| `schools.csv` | Synthetic school reference data |
-| `students.csv` | Synthetic student enrolment data |
-| `attendance.csv` | Monthly attendance records |
-| `assessment_results.csv` | Assessment outcomes by domain |
-| `school_events.json` | API-style school event data |
+| Azure Data Lake Storage Gen2 | Raw synthetic file storage and monthly batch folders |
+| Azure Data Factory | Pipeline A ingestion, Pipeline B Databricks trigger wrapper, and Pipeline C event-driven monthly orchestration |
+| Azure Synapse Analytics serverless SQL | Pipeline A SQL querying, validation, and reporting views |
+| Azure Databricks and Delta Lake | Pipeline B lakehouse processing, QA rules, failed-record handling, and Gold/Reporting outputs |
+| Azure SQL Database serverless | Pipeline C production-style monthly merge/upsert processing, audit, quality, Gold tables, and reporting views |
+| Power BI Desktop | Semantic models, dashboards, validation screenshots, and stakeholder-facing reporting |
+| Python | Synthetic data generation, validation plotting, and helper scripts |
+| SQL | Data modelling, quality checks, reconciliation, stored procedures, and reporting views |
 
-Two synthetic batches are used in the Databricks pipeline:
-
-| Batch | Batch ID | Data Period | Load Type |
-|---|---|---:|---|
-| Batch 1 | `2025-01-15` | 2024 | Initial load |
-| Batch 2 | `2026-01-15` | 2025 | Incremental load |
-
-Batch 2 includes new and changed data so the project can demonstrate incremental processing, regression checks, and dashboard refresh behaviour.
-
-## Databricks QA Pipeline
-
-The Databricks implementation uses these layers:
-
-| Layer | Purpose |
-|---|---|
-| Raw | Batch-partitioned source files in ADLS |
-| Bronze | Raw Delta tables with audit metadata and lineage |
-| Silver | Typed, cleaned, standardised Delta tables |
-| QA | Rule catalogue, validation results, failed records, and defect log |
-| Gold | Production-style star schema with dimensions and facts |
-| Reporting | Stable Power BI-facing views |
-
-Implemented QA rules:
-
-- Missing student ID
-- Missing school ID
-- Invalid attendance days
-- Duplicate attendance business records
-- Attendance references missing student
-- Assessment references missing student
-- Invalid assessment score
-- Invalid proficiency band
-- Invalid school status
-- Future attendance month
-- School event linked to inactive or missing school
-
-Latest validated QA outcome:
-
-| Batch | QA Rule Results | Issue Rule Results | Failed or Warning Records | Defects |
-|---|---:|---:|---:|---:|
-| Batch 1 - 2024 data | 11 | 7 | 14 | 7 |
-| Batch 2 - 2025 data | 11 | 5 | 8 | 5 |
-| Total | 22 | 12 | 22 | 12 |
-
-## Gold Star Schema
-
-The Databricks Gold layer includes shared dimensions and facts for reporting:
-
-Dimensions:
-
-- `gold.dim_batch`
-- `gold.dim_date`
-- `gold.dim_school`
-- `gold.dim_student`
-- `gold.dim_year_level`
-- `gold.dim_assessment_domain`
-- `gold.dim_proficiency_band`
-- `gold.dim_dq_rule`
-
-Facts:
-
-- `gold.fact_attendance`
-- `gold.fact_assessment_result`
-- `gold.fact_data_quality_result`
-- `gold.fact_defect`
-
-Reporting views are created in the `reporting` schema and imported into Power BI.
-
-## Power BI Reports
-
-The Databricks QA dashboard imports Databricks reporting views and includes:
-
-- Data Quality Overview
-- Rule Failure Details
-- Attendance Validation
-- Assessment Validation
-
-Current report file:
-
-- `powerbi/QA_dashboard.pbix`
-
-Dashboard screenshots:
-
-- `powerbi/screenshots/powerbi_data_quality_overview.png`
-- `powerbi/screenshots/powerbi_rule_failure_details.png`
-- `powerbi/screenshots/powerbi_attendance_validation.png`
-- `powerbi/screenshots/powerbi_assessment_validation.png`
-
-The earlier Synapse dashboard remains as baseline evidence:
-
-- `powerbi/lakehouse_dashboard.pbix`
-- Earlier screenshots are also stored under `powerbi/screenshots/`.
-
-## Repository Structure
+## Repository Map
 
 ```text
-adf/                         ADF exports for the original Synapse pipeline
+adf/                         Pipeline-specific ADF exports and screenshots
 data/                        Synthetic generated data and batch folders
-databricks_notebooks/        Exported Databricks notebooks in .ipynb format
-docs/                        Architecture, QA strategy, data model, UAT, governance, and project notes
-images/                      Azure, Databricks, ADF, and evidence screenshots
-powerbi/                     Power BI reports, notes, and screenshots
-scripts/                     Synthetic data generation and script-format notebook exports
-sql/                         Synapse SQL scripts and earlier lakehouse SQL artefacts
-checklist.md                 Project execution and evidence checklist
+databricks_notebooks/        Databricks notebook exports
+docs/                        Shared and pipeline-specific documentation
+images/                      Azure, Databricks, validation, and evidence screenshots
+powerbi/                     Power BI reports, screenshots, and report notes
+reports/                     Analysis report outputs
+scripts/                     Shared and pipeline-specific helper scripts
+sql/                         Pipeline-specific SQL scripts
+CHECKLIST.md                 Pipeline C execution and evidence tracker
 ```
 
 ## Key Evidence
 
-Databricks QA project:
+### Pipeline A: ADF + Synapse Baseline
 
-- [docs/databricks_qa_layer_design.md](docs/databricks_qa_layer_design.md)
-- [docs/qa_test_strategy.md](docs/qa_test_strategy.md)
-- [docs/test_case_matrix.md](docs/test_case_matrix.md)
-- [docs/defect_log.md](docs/defect_log.md)
-- [docs/uat_plan.md](docs/uat_plan.md)
-- [docs/requirements_traceability_matrix.md](docs/requirements_traceability_matrix.md)
-- [docs/governance_accessibility_privacy_checklist.md](docs/governance_accessibility_privacy_checklist.md)
-- [docs/power_bi_dashboard_test_results.md](docs/power_bi_dashboard_test_results.md)
-- [docs/data_model_diagram.md](docs/data_model_diagram.md)
-- `databricks_notebooks/01_ingest_raw_to_bronze.ipynb`
-- `databricks_notebooks/02_transform_bronze_to_silver.ipynb`
-- `databricks_notebooks/03_run_data_quality_checks.ipynb`
-- `databricks_notebooks/04_build_gold_reporting_tables.ipynb`
-- `databricks_notebooks/05_create_reporting_views.ipynb`
-- `scripts/exported_notebook_scripts/` for script-format copies of the Databricks notebooks
-- `images/databricks_qa/`
-- `powerbi/QA_dashboard.pbix`
+- [Pipeline A documentation](docs/pipeline_a_synapse_baseline/)
+- [Pipeline A SQL scripts](sql/pipeline_a_synapse_baseline/)
+- [Pipeline A Power BI evidence](powerbi/pipeline_a_synapse_baseline/)
 
-ADF + Synapse baseline:
+### Pipeline B: Databricks QA Lakehouse
 
-- `adf/pipeline_export/pl_copy_raw_to_staging.json`
-- `sql/01_create_staging_views.sql`
-- `sql/04_create_vault_tables.sql`
-- `sql/05_create_curated_tables.sql`
-- `sql/06_data_quality_checks.sql`
-- `sql/07_reporting_views.sql`
-- [docs/technical_specification.md](docs/technical_specification.md)
+- [Databricks QA layer design](docs/pipeline_b_databricks_qa/databricks_qa_layer_design.md)
+- [QA test strategy](docs/pipeline_b_databricks_qa/qa_test_strategy.md)
+- [Test case matrix](docs/pipeline_b_databricks_qa/test_case_matrix.md)
+- [Defect log](docs/pipeline_b_databricks_qa/defect_log.md)
+- [UAT plan](docs/pipeline_b_databricks_qa/uat_plan.md)
+- [Power BI dashboard test results](docs/pipeline_b_databricks_qa/power_bi_dashboard_test_results.md)
+- [Databricks notebook exports](databricks_notebooks/)
+- [Pipeline B Power BI evidence](powerbi/pipeline_b_databricks_qa/)
+
+### Pipeline C: Monthly Education Insights
+
+- [Pipeline C documentation index](docs/pipeline_c_monthly_insights/)
+- [SQL layer design](docs/pipeline_c_monthly_insights/sql_layer_design.md)
+- [ETL design](docs/pipeline_c_monthly_insights/etl_design.md)
+- [Dashboard and semantic model design](docs/pipeline_c_monthly_insights/dashboard_semantic_model_design.md)
+- [Overall analysis report](docs/pipeline_c_monthly_insights/overall_analysis_report.md)
+- [Overall analysis report PDF](reports/pipeline_c_monthly_insights/analysis_report.pdf)
+- [Monthly brief: August 2025](docs/pipeline_c_monthly_insights/monthly_insights_brief_2025_08.md)
+- [Monthly brief: September 2025](docs/pipeline_c_monthly_insights/monthly_insights_brief_2025_09.md)
+- [Monthly brief: October 2025](docs/pipeline_c_monthly_insights/monthly_insights_brief_2025_10.md)
+- [Monthly brief: November 2025](docs/pipeline_c_monthly_insights/monthly_insights_brief_2025_11.md)
+- [Pipeline C Power BI screenshots](powerbi/pipeline_c_monthly_insights/)
+- [Pipeline C SQL scripts](sql/pipeline_c_monthly_insights/)
 
 ## Role Alignment
 
-This project maps to the ACT Education Quality Assurance Analyst role by demonstrating:
+Pipeline B is the strongest ACT Education QA Analyst evidence because it demonstrates test strategy, rule validation, defect handling, failed-record evidence, dashboard validation, UAT planning, traceability, governance, privacy, and accessibility.
 
-- Data pipeline QA across ingestion, transformation, validation, reporting, and service delivery.
-- Quality assurance practices for completeness, validity, duplicates, referential integrity, and business review flags.
-- Defect logging with severity, status, failed record counts, and recommended actions.
-- Batch-based regression testing using initial and incremental runs.
-- Power BI dashboard testing against Databricks reporting views.
-- UAT planning, traceability, governance, privacy, and accessibility documentation.
-- Clear evidence capture for technical and non-technical stakeholders.
+Pipeline C extends the same education domain into Analytics Officer evidence. It shows how monthly source data can be turned into stakeholder-ready Power BI pages and written insights about attendance seasonality, Year 7 transition patterns, senior secondary volatility, attendance-to-assessment association, and reporting confidence.
 
 ## Limitations
 
-- The data is synthetic and intentionally small.
-- Production CI/CD, automated monitoring, and alerting are documented as recommendations but not fully implemented.
+- The data is synthetic and intentionally portfolio-sized.
 - Power BI uses import mode for portfolio convenience.
-- The ADF wrapper uses a short-lived Databricks token for demonstration; production should use managed identity or service principal patterns where supported.
-- The earlier Synapse Data Vault layer demonstrates modelling awareness rather than a full enterprise Data Vault implementation.
-
-## Future Improvements
-
-- Add CI/CD for Databricks notebooks, SQL, ADF, and Power BI artefacts.
-- Store secrets and tokens in Azure Key Vault.
-- Add automated pipeline alerts for failed Databricks Jobs, ADF runs, and high-severity data quality failures.
-- Add formal row-level security and object-level security for Power BI and Databricks.
-- Add Microsoft Purview-style data catalogue and lineage documentation.
-- Add production runbooks for reruns, incident handling, and defect closure.
+- Production CI/CD, alerting, Key Vault integration, Purview-style catalogue, and formal support runbooks are documented as future hardening areas rather than fully implemented services.

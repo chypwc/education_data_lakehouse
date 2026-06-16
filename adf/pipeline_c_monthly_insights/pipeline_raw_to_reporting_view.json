@@ -1,0 +1,894 @@
+{
+    "name": "education_analysis_pipeline",
+    "properties": {
+        "activities": [
+            {
+                "name": "foreach_copy_bronze_csv",
+                "description": "copy_bronze_file_to_table",
+                "type": "ForEach",
+                "dependsOn": [
+                    {
+                        "activity": "bronze_prepare_batch_load",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ],
+                "userProperties": [],
+                "typeProperties": {
+                    "items": {
+                        "value": "@if(\n    equals(pipeline().parameters.load_mode, 'INITIAL_SNAPSHOT'),\n    createArray(\n        json('{\"file_name\":\"schools.csv\",\"table_name\":\"schools\"}'),\n        json('{\"file_name\":\"students.csv\",\"table_name\":\"students\"}'),\n        json('{\"file_name\":\"attendance.csv\",\"table_name\":\"attendance\"}'),\n        json('{\"file_name\":\"assessment_results.csv\",\"table_name\":\"assessment_results\"}')\n    ),\n    createArray(\n        json('{\"file_name\":\"schools_delta.csv\",\"table_name\":\"schools\"}'),\n        json('{\"file_name\":\"students_delta.csv\",\"table_name\":\"students\"}'),\n        json('{\"file_name\":\"attendance.csv\",\"table_name\":\"attendance\"}'),\n        json('{\"file_name\":\"assessment_results_delta.csv\",\"table_name\":\"assessment_results\"}')\n    )\n)",
+                        "type": "Expression"
+                    },
+                    "activities": [
+                        {
+                            "name": "copy_bronze_file_to_table",
+                            "type": "Copy",
+                            "dependsOn": [],
+                            "policy": {
+                                "timeout": "0.12:00:00",
+                                "retry": 0,
+                                "retryIntervalInSeconds": 30,
+                                "secureOutput": false,
+                                "secureInput": false
+                            },
+                            "userProperties": [],
+                            "typeProperties": {
+                                "source": {
+                                    "type": "DelimitedTextSource",
+                                    "additionalColumns": [
+                                        {
+                                            "name": "source_batch_id",
+                                            "value": {
+                                                "value": "@pipeline().parameters.source_batch_id",
+                                                "type": "Expression"
+                                            }
+                                        },
+                                        {
+                                            "name": "reporting_month",
+                                            "value": {
+                                                "value": "@pipeline().parameters.reporting_month",
+                                                "type": "Expression"
+                                            }
+                                        },
+                                        {
+                                            "name": "source_file_name",
+                                            "value": {
+                                                "value": "@item().file_name",
+                                                "type": "Expression"
+                                            }
+                                        }
+                                    ],
+                                    "storeSettings": {
+                                        "type": "AzureBlobFSReadSettings",
+                                        "recursive": true,
+                                        "enablePartitionDiscovery": false
+                                    },
+                                    "formatSettings": {
+                                        "type": "DelimitedTextReadSettings"
+                                    }
+                                },
+                                "sink": {
+                                    "type": "AzureSqlSink",
+                                    "writeBehavior": "insert",
+                                    "sqlWriterUseTableLock": false,
+                                    "disableMetricsCollection": false
+                                },
+                                "enableStaging": false,
+                                "translator": {
+                                    "type": "TabularTranslator",
+                                    "typeConversion": true,
+                                    "typeConversionSettings": {
+                                        "allowDataTruncation": true,
+                                        "treatBooleanAsNumber": false
+                                    }
+                                }
+                            },
+                            "inputs": [
+                                {
+                                    "referenceName": "ds_adls_csv",
+                                    "type": "DatasetReference",
+                                    "parameters": {
+                                        "container_name": "education-lakehouse",
+                                        "folder_path": {
+                                            "value": "@concat('raw/month=', pipeline().parameters.reporting_month)",
+                                            "type": "Expression"
+                                        },
+                                        "file_name": "@item().file_name"
+                                    }
+                                }
+                            ],
+                            "outputs": [
+                                {
+                                    "referenceName": "ds_azure_sql_table",
+                                    "type": "DatasetReference",
+                                    "parameters": {
+                                        "schema_name": "bronze",
+                                        "table_name": "@item().table_name"
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "name": "audit_record_file_load",
+                            "type": "SqlServerStoredProcedure",
+                            "dependsOn": [
+                                {
+                                    "activity": "copy_bronze_file_to_table",
+                                    "dependencyConditions": [
+                                        "Succeeded"
+                                    ]
+                                }
+                            ],
+                            "policy": {
+                                "timeout": "0.12:00:00",
+                                "retry": 0,
+                                "retryIntervalInSeconds": 30,
+                                "secureOutput": false,
+                                "secureInput": false
+                            },
+                            "userProperties": [],
+                            "typeProperties": {
+                                "storedProcedureName": "[audit].[usp_record_file_load]",
+                                "storedProcedureParameters": {
+                                    "load_status": {
+                                        "value": "LOADED",
+                                        "type": "String"
+                                    },
+                                    "loaded_row_count": {
+                                        "value": {
+                                            "value": "@activity('copy_bronze_file_to_table').output.rowsCopied",
+                                            "type": "Expression"
+                                        },
+                                        "type": "Int32"
+                                    },
+                                    "pipeline_run_id": {
+                                        "value": {
+                                            "value": "@int(variables('pipeline_run_id'))",
+                                            "type": "Expression"
+                                        },
+                                        "type": "Int64"
+                                    },
+                                    "rejected_row_count": {
+                                        "value": {
+                                            "value": "@sub(activity('copy_bronze_file_to_table').output.rowsRead, activity('copy_bronze_file_to_table').output.rowsCopied)",
+                                            "type": "Expression"
+                                        },
+                                        "type": "Int32"
+                                    },
+                                    "reporting_month": {
+                                        "value": {
+                                            "value": "@pipeline().parameters.reporting_month",
+                                            "type": "Expression"
+                                        },
+                                        "type": "String"
+                                    },
+                                    "source_batch_id": {
+                                        "value": {
+                                            "value": "@pipeline().parameters.source_batch_id",
+                                            "type": "Expression"
+                                        },
+                                        "type": "String"
+                                    },
+                                    "source_file_name": {
+                                        "value": {
+                                            "value": "@item().file_name",
+                                            "type": "Expression"
+                                        },
+                                        "type": "String"
+                                    },
+                                    "source_row_count": {
+                                        "value": {
+                                            "value": "@activity('copy_bronze_file_to_table').output.rowsRead",
+                                            "type": "Expression"
+                                        },
+                                        "type": "Int32"
+                                    },
+                                    "target_table_name": {
+                                        "value": {
+                                            "value": "@concat('bronze.', item().table_name)",
+                                            "type": "Expression"
+                                        },
+                                        "type": "String"
+                                    }
+                                }
+                            },
+                            "linkedServiceName": {
+                                "referenceName": "ls_sql_database",
+                                "type": "LinkedServiceReference"
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "name": "copy_bronze_school_events",
+                "type": "Copy",
+                "dependsOn": [
+                    {
+                        "activity": "foreach_copy_bronze_csv",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ],
+                "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "source": {
+                        "type": "JsonSource",
+                        "additionalColumns": [
+                            {
+                                "name": "source_batch_id",
+                                "value": {
+                                    "value": "@pipeline().parameters.source_batch_id",
+                                    "type": "Expression"
+                                }
+                            },
+                            {
+                                "name": "reporting_month",
+                                "value": {
+                                    "value": "@pipeline().parameters.reporting_month",
+                                    "type": "Expression"
+                                }
+                            },
+                            {
+                                "name": "source_file_name",
+                                "value": "school_events.json"
+                            }
+                        ],
+                        "storeSettings": {
+                            "type": "AzureBlobFSReadSettings",
+                            "recursive": true,
+                            "enablePartitionDiscovery": false
+                        },
+                        "formatSettings": {
+                            "type": "JsonReadSettings"
+                        }
+                    },
+                    "sink": {
+                        "type": "AzureSqlSink",
+                        "writeBehavior": "insert",
+                        "sqlWriterUseTableLock": false,
+                        "disableMetricsCollection": false
+                    },
+                    "enableStaging": false
+                },
+                "inputs": [
+                    {
+                        "referenceName": "ds_adls_json",
+                        "type": "DatasetReference",
+                        "parameters": {
+                            "container_name": {
+                                "value": "education-lakehouse",
+                                "type": "Expression"
+                            },
+                            "folder_path": {
+                                "value": "@concat('raw/month=', pipeline().parameters.reporting_month)",
+                                "type": "Expression"
+                            },
+                            "file_name": "school_events.json"
+                        }
+                    }
+                ],
+                "outputs": [
+                    {
+                        "referenceName": "ds_azure_sql_table",
+                        "type": "DatasetReference",
+                        "parameters": {
+                            "schema_name": "bronze",
+                            "table_name": "school_events"
+                        }
+                    }
+                ]
+            },
+            {
+                "name": "audit_record_school_events_load",
+                "type": "SqlServerStoredProcedure",
+                "dependsOn": [
+                    {
+                        "activity": "copy_bronze_school_events",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ],
+                "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "storedProcedureName": "[audit].[usp_record_file_load]",
+                    "storedProcedureParameters": {
+                        "load_status": {
+                            "value": "LOADED",
+                            "type": "String"
+                        },
+                        "loaded_row_count": {
+                            "value": {
+                                "value": "@activity('copy_bronze_school_events').output.rowsCopied",
+                                "type": "Expression"
+                            },
+                            "type": "Int32"
+                        },
+                        "pipeline_run_id": {
+                            "value": {
+                                "value": "@int(variables('pipeline_run_id'))",
+                                "type": "Expression"
+                            },
+                            "type": "Int64"
+                        },
+                        "rejected_row_count": {
+                            "value": {
+                                "value": "@sub(activity('copy_bronze_school_events').output.rowsRead, activity('copy_bronze_school_events').output.rowsCopied)",
+                                "type": "Expression"
+                            },
+                            "type": "Int32"
+                        },
+                        "reporting_month": {
+                            "value": {
+                                "value": "@pipeline().parameters.reporting_month",
+                                "type": "Expression"
+                            },
+                            "type": "String"
+                        },
+                        "source_batch_id": {
+                            "value": {
+                                "value": "@pipeline().parameters.source_batch_id",
+                                "type": "Expression"
+                            },
+                            "type": "String"
+                        },
+                        "source_file_name": {
+                            "value": "school_events.json",
+                            "type": "String"
+                        },
+                        "source_row_count": {
+                            "value": {
+                                "value": "@activity('copy_bronze_school_events').output.rowsRead",
+                                "type": "Expression"
+                            },
+                            "type": "Int32"
+                        },
+                        "target_table_name": {
+                            "value": "bronze.school_events",
+                            "type": "String"
+                        }
+                    }
+                },
+                "linkedServiceName": {
+                    "referenceName": "ls_sql_database",
+                    "type": "LinkedServiceReference"
+                }
+            },
+            {
+                "name": "bronze_prepare_batch_load",
+                "type": "SqlServerStoredProcedure",
+                "dependsOn": [
+                    {
+                        "activity": "set_pipeline_run_id",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ],
+                "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "storedProcedureName": "[bronze].[usp_prepare_batch_load]",
+                    "storedProcedureParameters": {
+                        "reporting_month": {
+                            "value": {
+                                "value": "@pipeline().parameters.reporting_month",
+                                "type": "Expression"
+                            },
+                            "type": "String"
+                        },
+                        "source_batch_id": {
+                            "value": {
+                                "value": "@pipeline().parameters.source_batch_id",
+                                "type": "Expression"
+                            },
+                            "type": "String"
+                        }
+                    }
+                },
+                "linkedServiceName": {
+                    "referenceName": "ls_sql_database",
+                    "type": "LinkedServiceReference"
+                }
+            },
+            {
+                "name": "quality_apply_checks",
+                "type": "SqlServerStoredProcedure",
+                "dependsOn": [
+                    {
+                        "activity": "audit_record_school_events_load",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ],
+                "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "storedProcedureName": "[quality].[usp_apply_quality_checks]",
+                    "storedProcedureParameters": {
+                        "pipeline_run_id": {
+                            "value": {
+                                "value": "@int(variables('pipeline_run_id'))",
+                                "type": "Expression"
+                            },
+                            "type": "Int64"
+                        },
+                        "reporting_month": {
+                            "value": {
+                                "value": "@pipeline().parameters.reporting_month",
+                                "type": "Expression"
+                            },
+                            "type": "String"
+                        },
+                        "source_batch_id": {
+                            "value": {
+                                "value": "@pipeline().parameters.source_batch_id",
+                                "type": "Expression"
+                            },
+                            "type": "String"
+                        }
+                    }
+                },
+                "linkedServiceName": {
+                    "referenceName": "ls_sql_database",
+                    "type": "LinkedServiceReference"
+                }
+            },
+            {
+                "name": "silver_merge_conformed_tables",
+                "type": "SqlServerStoredProcedure",
+                "dependsOn": [
+                    {
+                        "activity": "quality_apply_checks",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ],
+                "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "storedProcedureName": "[silver].[usp_merge_conformed_tables]",
+                    "storedProcedureParameters": {
+                        "pipeline_run_id": {
+                            "value": {
+                                "value": "@int(variables('pipeline_run_id'))",
+                                "type": "Expression"
+                            },
+                            "type": "Int64"
+                        },
+                        "reporting_month": {
+                            "value": {
+                                "value": "@pipeline().parameters.reporting_month",
+                                "type": "Expression"
+                            },
+                            "type": "String"
+                        },
+                        "source_batch_id": {
+                            "value": {
+                                "value": "@pipeline().parameters.source_batch_id",
+                                "type": "Expression"
+                            },
+                            "type": "String"
+                        }
+                    }
+                },
+                "linkedServiceName": {
+                    "referenceName": "ls_sql_database",
+                    "type": "LinkedServiceReference"
+                }
+            },
+            {
+                "name": "audit_reconcile_bronze_to_silver",
+                "type": "SqlServerStoredProcedure",
+                "dependsOn": [
+                    {
+                        "activity": "silver_merge_conformed_tables",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ],
+                "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "storedProcedureName": "[audit].[usp_reconcile_bronze_to_silver]",
+                    "storedProcedureParameters": {
+                        "pipeline_run_id": {
+                            "value": {
+                                "value": "@int(variables('pipeline_run_id'))",
+                                "type": "Expression"
+                            },
+                            "type": "Int64"
+                        },
+                        "reporting_month": {
+                            "value": {
+                                "value": "@pipeline().parameters.reporting_month",
+                                "type": "Expression"
+                            },
+                            "type": "String"
+                        },
+                        "source_batch_id": {
+                            "value": {
+                                "value": "@pipeline().parameters.source_batch_id",
+                                "type": "Expression"
+                            },
+                            "type": "String"
+                        }
+                    }
+                },
+                "linkedServiceName": {
+                    "referenceName": "ls_sql_database",
+                    "type": "LinkedServiceReference"
+                }
+            },
+            {
+                "name": "gold_refresh_reporting_model",
+                "type": "SqlServerStoredProcedure",
+                "dependsOn": [
+                    {
+                        "activity": "audit_reconcile_bronze_to_silver",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ],
+                "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "storedProcedureName": "[gold].[usp_refresh_reporting_model]",
+                    "storedProcedureParameters": {
+                        "reporting_month": {
+                            "value": {
+                                "value": "@pipeline().parameters.reporting_month",
+                                "type": "Expression"
+                            },
+                            "type": "String"
+                        },
+                        "source_batch_id": {
+                            "value": {
+                                "value": "@pipeline().parameters.source_batch_id",
+                                "type": "Expression"
+                            },
+                            "type": "String"
+                        }
+                    }
+                },
+                "linkedServiceName": {
+                    "referenceName": "ls_sql_database",
+                    "type": "LinkedServiceReference"
+                }
+            },
+            {
+                "name": "audit_reconcile_silver_to_gold",
+                "type": "SqlServerStoredProcedure",
+                "dependsOn": [
+                    {
+                        "activity": "gold_refresh_reporting_model",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ],
+                "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "storedProcedureName": "[audit].[usp_reconcile_silver_to_gold]",
+                    "storedProcedureParameters": {
+                        "pipeline_run_id": {
+                            "value": {
+                                "value": "@int(variables('pipeline_run_id'))",
+                                "type": "Expression"
+                            },
+                            "type": "Int64"
+                        },
+                        "reporting_month": {
+                            "value": {
+                                "value": "@pipeline().parameters.reporting_month",
+                                "type": "Expression"
+                            },
+                            "type": "String"
+                        },
+                        "source_batch_id": {
+                            "value": {
+                                "value": "@pipeline().parameters.source_batch_id",
+                                "type": "Expression"
+                            },
+                            "type": "String"
+                        }
+                    }
+                },
+                "linkedServiceName": {
+                    "referenceName": "ls_sql_database",
+                    "type": "LinkedServiceReference"
+                }
+            },
+            {
+                "name": "reporting_validate_views",
+                "type": "SqlServerStoredProcedure",
+                "dependsOn": [
+                    {
+                        "activity": "audit_reconcile_silver_to_gold",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ],
+                "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "storedProcedureName": "[reporting].[usp_validate_reporting_views]"
+                },
+                "linkedServiceName": {
+                    "referenceName": "ls_sql_database",
+                    "type": "LinkedServiceReference"
+                }
+            },
+            {
+                "name": "audit_start_pipeline_run",
+                "type": "SqlServerStoredProcedure",
+                "dependsOn": [],
+                "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "storedProcedureName": "[audit].[usp_start_pipeline_run]",
+                    "storedProcedureParameters": {
+                        "adf_run_id": {
+                            "value": {
+                                "value": "@pipeline().RunId",
+                                "type": "Expression"
+                            },
+                            "type": "String"
+                        },
+                        "load_mode": {
+                            "value": {
+                                "value": "@pipeline().parameters.load_mode",
+                                "type": "Expression"
+                            },
+                            "type": "String"
+                        },
+                        "pipeline_name": {
+                            "value": {
+                                "value": "@pipeline().Pipeline",
+                                "type": "Expression"
+                            },
+                            "type": "String"
+                        },
+                        "pipeline_run_id": {
+                            "value": null,
+                            "type": "String"
+                        },
+                        "reporting_month": {
+                            "value": {
+                                "value": "@pipeline().parameters.reporting_month",
+                                "type": "Expression"
+                            },
+                            "type": "String"
+                        },
+                        "source_batch_id": {
+                            "value": {
+                                "value": "@pipeline().parameters.source_batch_id",
+                                "type": "Expression"
+                            },
+                            "type": "String"
+                        },
+                        "trigger_file": {
+                            "value": {
+                                "value": "@pipeline().parameters.source_file",
+                                "type": "Expression"
+                            },
+                            "type": "String"
+                        }
+                    }
+                },
+                "linkedServiceName": {
+                    "referenceName": "ls_sql_database",
+                    "type": "LinkedServiceReference"
+                }
+            },
+            {
+                "name": "audit_finish_pipeline_run",
+                "type": "SqlServerStoredProcedure",
+                "dependsOn": [
+                    {
+                        "activity": "reporting_validate_views",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ],
+                "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "storedProcedureName": "[audit].[usp_finish_pipeline_run]",
+                    "storedProcedureParameters": {
+                        "error_message": {
+                            "value": null,
+                            "type": "String"
+                        },
+                        "pipeline_run_id": {
+                            "value": {
+                                "value": "@int(variables('pipeline_run_id'))",
+                                "type": "Expression"
+                            },
+                            "type": "Int64"
+                        },
+                        "run_status": {
+                            "value": "SUCCEEDED",
+                            "type": "String"
+                        }
+                    }
+                },
+                "linkedServiceName": {
+                    "referenceName": "ls_sql_database",
+                    "type": "LinkedServiceReference"
+                }
+            },
+            {
+                "name": "lookup_pipeline_run_id",
+                "type": "Lookup",
+                "dependsOn": [
+                    {
+                        "activity": "audit_start_pipeline_run",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ],
+                "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "source": {
+                        "type": "AzureSqlSource",
+                        "sqlReaderQuery": {
+                            "value": "@concat(\n'SELECT TOP 1 pipeline_run_id\n FROM audit.pipeline_run\n WHERE adf_run_id = ''', pipeline().RunId, '''\n   AND source_batch_id = ''', pipeline().parameters.source_batch_id, '''\n   AND reporting_month = ''', pipeline().parameters.reporting_month, '''\n ORDER BY pipeline_run_id DESC'\n)",
+                            "type": "Expression"
+                        },
+                        "queryTimeout": "02:00:00",
+                        "partitionOption": "None"
+                    },
+                    "dataset": {
+                        "referenceName": "ds_azure_sql_table",
+                        "type": "DatasetReference",
+                        "parameters": {
+                            "schema_name": "audit",
+                            "table_name": "pipeline_run"
+                        }
+                    }
+                }
+            },
+            {
+                "name": "set_pipeline_run_id",
+                "type": "SetVariable",
+                "dependsOn": [
+                    {
+                        "activity": "lookup_pipeline_run_id",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ],
+                "policy": {
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "variableName": "pipeline_run_id",
+                    "value": {
+                        "value": "@string(activity('lookup_pipeline_run_id').output.firstRow.pipeline_run_id)",
+                        "type": "Expression"
+                    }
+                }
+            }
+        ],
+        "parameters": {
+            "reporting_month": {
+                "type": "string",
+                "defaultValue": "2024-02"
+            },
+            "source_folder": {
+                "type": "string",
+                "defaultValue": "raw/month=2024-02"
+            },
+            "load_mode": {
+                "type": "string",
+                "defaultValue": "MONTHLY_CHANGE"
+            },
+            "source_batch_id": {
+                "type": "string",
+                "defaultValue": "2024_02"
+            },
+            "source_file": {
+                "type": "string",
+                "defaultValue": "_READY.json"
+            }
+        },
+        "variables": {
+            "pipeline_run_id": {
+                "type": "String"
+            }
+        },
+        "annotations": [],
+        "lastPublishTime": "2026-06-15T01:53:44Z"
+    },
+    "type": "Microsoft.DataFactory/factories/pipelines"
+}
